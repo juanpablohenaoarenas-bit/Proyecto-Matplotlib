@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import matplotlib.image as mpimg
 
 # ----------------------------------------------------------------------
 # DATOS: Precio del dólar en Colombia
@@ -27,6 +28,32 @@ ax.grid(True, alpha=0.3)
 ax.text(0.02, 0.98, 'Haz CLICK en cualquier parte para pausar/reanudar', 
         transform=ax.transAxes, fontsize=10, color='red',
         verticalalignment='top', bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.3))
+
+
+# ----------------------------------------------------------------------
+# CARGAR Y MOSTRAR LA IMAGEN DE FONDO (CORREGIDO)
+# ----------------------------------------------------------------------
+try:
+    # Cargar la imagen
+    img = mpimg.imread('img/fondo.jpg')
+    
+    # CORRECCIÓN: extent debe coincidir con los límites de los ejes
+    # extent = [x_inicio, x_fin, y_inicio, y_fin]
+    ax.imshow(img, 
+              extent=[2016.5, 2026.5, 2500, 4500],  # ¡AHORA COINCIDE CON TUS DATOS!
+              aspect='auto',    # 'auto' para que se estire al tamaño del gráfico
+              alpha=0.3,        # Transparencia (0.3 = 30% opaco)
+              zorder=-1)        # Detrás de todo
+    
+    print("✅ Imagen de fondo cargada correctamente")
+    
+except FileNotFoundError:
+    print("⚠️  No se encontró 'fondo.jpg' - el gráfico continuará sin imagen")
+except Exception as e:
+    print(f"⚠️  Error al cargar la imagen: {e}")
+
+# Crear la línea de datos (con zorder mayor que la imagen)
+linea, = ax.plot([], [], 'bo-', linewidth=2, markersize=8, zorder=1)
 
 # ----------------------------------------------------------------------
 # CONFIGURAR LA ANIMACIÓN CON PAUSA
